@@ -1,24 +1,38 @@
 ﻿DNSLOOKUP.R4X
 =============
 
-DNSLOOKUP.R4X ist das Terminalwerkzeug fuer DNS-Aufloesung ueber R4NET.
+DNSLOOKUP liest familienfaehige DNS-Ergebnisse des vorhandenen DNSSVC.
 
-Projektstruktur seit 0.51.19:
-- `build.zig` baut die App als eigenes SDK-Projekt.
-- `build.zig.zon` bindet `r4os_sdk` als Paket.
-- `module.R4MF` beschreibt Artefakt, Zielpfad, Imports und Contract.
+API-Migration0.90.69
+-------------------
 
-Build unter Windows und Linux:
+Der normale Build verwendet SDK0.64.202, Contract0.64.93 und App2.
+SDK_PROFILE=r4os-zig-generation2 waehlt R4XStart2 und Query2.
+Die geordneten Importe folgen module.R4MF.
+
+    R4SYS:Query2:2
+
+DNSLOOKUP [-4|-6] hostname [server]
+Die bisherige Schreibweise verwendet A. -6 beziehungsweise /AAAA waehlt
+AAAA. /A ist ein Alias fuer -4. Explizite Resolver koennen IPv4 oder IPv6
+verwenden. Fuer eine Portangabe bei IPv6 gilt [adresse%interface]:port.
+Linklokales IPv6 verlangt eine numerische Interfaceidentitaet aus IPCONFIG.
+Die Ergebnisfamilie bleibt unabhaengig von der Resolver-Transportfamilie.
+Bis32 Antworten werden ueber maximal16er-Seiten unter einer unveraenderlichen
+Queryidentitaet gesammelt. Ein gemeinsames Clockbudget umfasst Info,
+Aufloesung, Seiten und Release. Erst das vollstaendige freigegebene Ergebnis
+wird angezeigt. Timeout, fehlender Dienst und fehlende Antwort unterscheiden
+sich in der Ausgabe. Die Standardausgabe nennt die konfigurierte Resolverfolge.
+
+Build im jeweiligen Repository
+-------------------------------
 
     Build.bat
     ./Build.sh
 
-Ergebnis:
+Die duennen Hoststarter fuehren gemeinsame PowerShell7-Logik aus.
+Settings.R4S ordnet die lokalen Besitzer zu. build.zig.zon pinnt den
+Standalone-Satz. Das Manifest besitzt Version, Klasse, Ziel und Abhaengigkeiten.
 
     Artifacts/Modules/DnsLookup/DNSLOOKUP.R4X
-
-Contract:
-- R4XStart-Entry: `r4_app_main`
-- App-Klasse: `console`
-- Platform-API-Imports: `R4SYS`, `R4NET`
-- Zielpfad im Image: `C:\R4OS\SOFTWARE\TERMINAL\DNSLOOKUP.R4X`
+    C:\R4OS\SOFTWARE\TERMINAL\DNSLOOKUP.R4X

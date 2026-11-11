@@ -4,7 +4,7 @@
 
 ## Package
 
-- Version: `0.1.2`
+- Package version `0.1.4`
 - Image target: `/R4OS/SOFTWARE/TERMINAL/DNSLOOKUP.R4X`
 - Image scope: `full`
 - Canonical project manifest: `module.R4MF`
@@ -18,7 +18,7 @@ On Windows:
 
     Build.bat
 
-On Linux or macOS:
+On Linux
 
     ./Build.sh
 
@@ -38,3 +38,16 @@ Detailed German technical notes from the migration are preserved in
 Original R4OS material is licensed under Apache License 2.0. See `LICENSE`
 and `NOTICE`. Any repository-specific external material is documented in
 `THIRD_PARTY_NOTICES.md`.
+
+## API migration 0.90.69
+
+The normal build selects SDK202, App2, R4XStart2 and platform Query2.
+The exact dependencies and ordered imports belong to module.R4MF.
+
+DNSLOOKUP [-4|-6] hostname [server] retains the existing default A lookup.
+/AAAA selects AAAA and /A selects A. The resolver transport family is
+independent of the answer family. Scoped IPv6 uses an explicit numeric
+interface identity, with [address%interface]:port for a nondefault port.
+All answers are collected across actual pinned pages under one absolute
+budget. Output starts after full validation and the single Release ACK.
+The default resolver display identifies the configured resolver order.
